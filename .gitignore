@@ -1,18 +1,25 @@
-# IntelliJ IDEA Project Files
-.idea/      #
-*.iml       #
-out/        #
-
+# IntelliJ
+.idea/
+*.iml
+out/
 
 # Build output
-# target/
-# build/
+target/
+build/
 
-# Log files
-# *.log
+# Logs and temp files
+*.log
+*.tmp
+*.bak
 
-# Local environment variables
-# .env
+# Environment
+.env
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
 
 ### Eclipse ###
 .apt_generated
@@ -40,4 +47,4 @@ bin/
 .DS_Store
 
 ### Windows ###
-# Thumbs.db
+Thumbs.db
