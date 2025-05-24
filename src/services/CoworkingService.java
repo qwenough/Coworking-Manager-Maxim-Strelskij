@@ -10,12 +10,14 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.FileInputStream;
 import java.lang.ClassNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 import models.CoworkingSpace;
 
 public class CoworkingService {
     private static final Scanner scanner = new Scanner(System.in);
-    private static List<CoworkingSpace> spaces = new ArrayList<>();
+    private static final Map<String, CoworkingSpace> spaces = new HashMap<>();
 
     public static void addNewSpace() {
         String type;
@@ -59,7 +61,7 @@ public class CoworkingService {
         }
 
         CoworkingSpace newSpace = new CoworkingSpace(type, price);
-        spaces.add(newSpace);
+        spaces.put(newSpace.getId(), newSpace);
         System.out.println("Space added successfully! ID: " + newSpace.getId());
     }
 
@@ -71,7 +73,7 @@ public class CoworkingService {
         ReservationService.removeReservationsForSpace(id);
 
         System.out.println(
-                spaces.removeIf(space -> space.getId().equals(id))
+                spaces.remove(id) != null
                         ? "Space and its reservations removed successfully!"
                         : "Space with ID " + id + " not found."
         );
@@ -82,7 +84,7 @@ public class CoworkingService {
         if (spaces.isEmpty()) {
             System.out.println("No spaces available.");
         } else {
-            for (CoworkingSpace space : spaces) {
+            for (CoworkingSpace space : spaces.values()) {
                 System.out.println(space);
             }
         }
@@ -92,7 +94,7 @@ public class CoworkingService {
         System.out.println("\nAvailable Coworking Spaces:");
         boolean found = false;
 
-        for (CoworkingSpace space : spaces) {
+        for (CoworkingSpace space : spaces.values()) {
             if (space.getAvailability()) {
                 System.out.println(space);
                 found = true;
@@ -105,17 +107,12 @@ public class CoworkingService {
     }
 
     public static CoworkingSpace getSpaceById(String id) {
-        for (CoworkingSpace space : spaces) {
-            if (space.getId().equals(id)) {
-                return space;
-            }
-        }
-        return null;
+        return spaces.get(id);
     }
 
     public static void saveSpacesToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("spaces.dat"))) {
-            oos.writeObject(spaces);
+            oos.writeObject(new ArrayList<>(spaces.values()));
             System.out.println("Spaces saved to file successfully!");
         } catch (IOException e) {
             System.out.println("Error saving spaces to file: " + e.getMessage());
@@ -126,7 +123,8 @@ public class CoworkingService {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("spaces.dat"))) {
             @SuppressWarnings("unchecked")
             List<CoworkingSpace> loadedSpaces = (List<CoworkingSpace>) ois.readObject();
-            spaces = loadedSpaces;
+            spaces.clear();
+            loadedSpaces.forEach(space -> spaces.put(space.getId(), space));
             System.out.println("Spaces loaded from file successfully!");
         } catch (IOException e) {
             System.out.println("Error: No spaces file found or error reading it: " + e.getMessage());
@@ -134,7 +132,7 @@ public class CoworkingService {
             System.out.println("Error: Incorrect data format in spaces file: " + e.getMessage());
         } catch (ClassCastException e) {
             System.out.println("Error: Data format mismatch in spaces.dat." + e.getMessage());
-            spaces = new ArrayList<>();
+            spaces.clear();
         }
     }
 }
