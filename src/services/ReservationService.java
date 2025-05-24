@@ -2,7 +2,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Scanner;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -36,12 +36,12 @@ public class ReservationService {
                 return;
             }
 
-            CoworkingSpace space = CoworkingService.getSpaceById(spaceId);
-            if (space == null) {
+            Optional<CoworkingSpace> spaceOpt = CoworkingService.getSpaceById(spaceId);
+            if (spaceOpt.isEmpty()) {
                 System.out.println("Space with this ID not found. Please try again.");
                 continue;
             }
-            if (!space.getAvailability()) {
+            if (!spaceOpt.get().getAvailability()) {
                 System.out.println("This space is already booked. Please choose another.");
                 continue;
             }
@@ -91,7 +91,7 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(spaceId, name, date, startTime, endTime);
         reservations.add(reservation);
-        Objects.requireNonNull(CoworkingService.getSpaceById(spaceId)).setAvailability(false);
+        CoworkingService.getSpaceById(spaceId).ifPresent(space -> space.setAvailability(false));
 
         System.out.println("Reservation created successfully! Reservation ID: " + reservation.getId());
     }
@@ -135,10 +135,8 @@ public class ReservationService {
         boolean removed = false;
         for (Reservation reservation : reservations) {
             if (reservation.getId().equals(id)) {
-                CoworkingSpace space = CoworkingService.getSpaceById(reservation.getSpaceId());
-                if (space != null) {
-                    space.setAvailability(true);
-                }
+                CoworkingService.getSpaceById(reservation.getSpaceId())
+                        .ifPresent(space -> space.setAvailability(true));
                 reservations.remove(reservation);
                 removed = true;
                 break;

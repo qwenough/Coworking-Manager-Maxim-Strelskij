@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.lang.ClassNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import models.CoworkingSpace;
 
@@ -92,22 +93,18 @@ public class CoworkingService {
 
     public static void viewAvailableSpaces() {
         System.out.println("\nAvailable Coworking Spaces:");
-        boolean found = false;
 
-        for (CoworkingSpace space : spaces.values()) {
-            if (space.getAvailability()) {
-                System.out.println(space);
-                found = true;
-            }
-        }
+        spaces.values().stream()
+                .filter(CoworkingSpace::getAvailability)
+                .forEach(System.out::println);
 
-        if (!found) {
+        if (spaces.values().stream().noneMatch(CoworkingSpace::getAvailability)) {
             System.out.println("No available spaces at the moment.");
         }
     }
 
-    public static CoworkingSpace getSpaceById(String id) {
-        return spaces.get(id);
+    public static Optional<CoworkingSpace> getSpaceById(String id) {
+        return Optional.ofNullable(spaces.get(id));
     }
 
     public static void saveSpacesToFile() {
