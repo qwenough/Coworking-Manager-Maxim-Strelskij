@@ -1,5 +1,7 @@
-package services;
-import exceptions.InvalidSpaceTypeException;
+package com.coworking.services;
+
+import com.coworking.exceptions.InvalidSpaceTypeException;
+import com.coworking.models.CoworkingSpace;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +15,6 @@ import java.lang.ClassNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import models.CoworkingSpace;
 
 public class CoworkingService {
     private static final Scanner scanner = new Scanner(System.in);
@@ -108,7 +108,7 @@ public class CoworkingService {
     }
 
     public static void saveSpacesToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("spaces.dat"))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("src/main/resources/spaces.dat"))) {
             oos.writeObject(new ArrayList<>(spaces.values()));
             System.out.println("Spaces saved to file successfully!");
         } catch (IOException e) {
@@ -117,7 +117,7 @@ public class CoworkingService {
     }
 
     public static void loadSpacesFromFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("spaces.dat"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("src/main/resources/spaces.dat"))) {
             @SuppressWarnings("unchecked")
             List<CoworkingSpace> loadedSpaces = (List<CoworkingSpace>) ois.readObject();
             spaces.clear();

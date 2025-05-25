@@ -1,7 +1,9 @@
+package com.coworking;
+
 import java.util.Scanner;
 
-import services.CoworkingService;
-import services.ReservationService;
+import com.coworking.services.CoworkingService;
+import com.coworking.services.ReservationService;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);

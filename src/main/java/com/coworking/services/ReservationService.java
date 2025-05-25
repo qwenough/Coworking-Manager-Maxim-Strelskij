@@ -1,4 +1,8 @@
-package services;
+package com.coworking.services;
+
+import com.coworking.exceptions.InvalidReservationTimeException;
+import com.coworking.models.Reservation;
+import com.coworking.models.CoworkingSpace;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +14,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.FileInputStream;
 import java.lang.ClassNotFoundException;
-
-import models.CoworkingSpace;
-import models.Reservation;
-import exceptions.InvalidReservationTimeException;
 
 public class ReservationService {
     private static List<Reservation> reservations = new ArrayList<>();
@@ -155,7 +155,7 @@ public class ReservationService {
     }
 
     public static void saveReservationsToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("reservations.dat"))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("src/main/resources/reservations.dat"))) {
             oos.writeObject(reservations);
             System.out.println("Reservations saved to file successfully!");
         } catch (IOException e) {
@@ -164,7 +164,7 @@ public class ReservationService {
     }
 
     public static void loadReservationsFromFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("reservations.dat"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("src/main/resources/reservations.dat"))) {
             @SuppressWarnings("unchecked")
             List<Reservation> loadedReservations = (List<Reservation>) ois.readObject();
             reservations = loadedReservations;
