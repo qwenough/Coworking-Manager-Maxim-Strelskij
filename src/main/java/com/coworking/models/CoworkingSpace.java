@@ -1,9 +1,8 @@
-package models;
+package com.coworking.models;
 
 import java.io.Serial;
 import java.io.Serializable;
-
-import utils.IdGenerator;
+import com.coworking.utils.IdGenerator;
 
 public class CoworkingSpace implements Serializable {
     @Serial

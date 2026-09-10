@@ -1,4 +1,4 @@
-package utils;
+package com.coworking.utils;
 
 import java.util.UUID;
 
